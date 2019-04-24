@@ -4,7 +4,7 @@
 
 import { reqShops, reqCategorys, reqAddress } from '../api'
 
-import { RECEIVE_SHOPS, RECEIVE_CATEGORYS, RECEIVE_ADDRESS } from './mutation-types'
+import { RECEIVE_SHOPS, RECEIVE_CATEGORYS, RECEIVE_ADDRESS, RECEIVE_USER } from './mutation-types'
 
 export default {
 
@@ -47,5 +47,10 @@ export default {
       const shops = result.data
       commit(RECEIVE_SHOPS,  shops )
     }
+  },
+
+  // 记录user的同步action
+  saveUser({commit}, user) {
+      commit(RECEIVE_USER, user) 
   }
 }
