@@ -5,30 +5,34 @@
 </template>
 
 <script>
+const CLASS_ON = "on"; // 全星
+const CLASS_HALF = "half"; // 半星
+const CLASS_OFF = "off"; // 灰星
+
 export default {
   // 什么接收那些属性
   props: {
     score: Number,
-    size: Number 
+    size: Number
   },
   computed: {
-    starClasses () {
-      const arr = []
-      const {score} = this
-      const scoreInteger = Math.floor(score)
+    starClasses() {
+      const arr = [];
+      const { score } = this;
+      const scoreInteger = Math.floor(score);
       // 1. 向arr中条件n个on
-      for (let i=0; i<scoreInteger; i++){
-        arr.push('on')
+      for (let i = 0; i < scoreInteger; i++) {
+        arr.push(CLASS_ON);
       }
       // 2. 可能向arr中添加1个half
-      if(score*10 - scoreInteger*10>=5){
-        arr.push('half')
+      if (score * 10 - scoreInteger * 10 >= 5) {
+        arr.push(CLASS_HALF);
       }
       // 3. 向arr中添加n个off
-      while(arr.length<5 ){
-        arr.push('off')
+      while (arr.length < 5) {
+        arr.push(CLASS_OFF);
       }
-      return arr
+      return arr;
     }
   }
 };

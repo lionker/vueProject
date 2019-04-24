@@ -18,7 +18,7 @@ export default {
     // 2. 根据提交mutation
     if (result.code === 0) {
       const address = result.data
-      commit(RECEIVE_ADDRESS, { address })
+      commit(RECEIVE_ADDRESS, { address })   // 传递给mutation的是包含数据的对象, 而不是数据本身
     }
   },
 
@@ -30,7 +30,7 @@ export default {
     // 2. 根据提交mutation
     if (result.code === 0) {
       const categorys = result.data
-      commit(RECEIVE_CATEGORYS, { categorys })
+      commit(RECEIVE_CATEGORYS,  categorys )
     }
   },
 
@@ -45,7 +45,7 @@ export default {
     // 2. 根据提交mutation
     if (result.code === 0) {
       const shops = result.data
-      commit(RECEIVE_SHOPS, { shops })
+      commit(RECEIVE_SHOPS,  shops )
     }
   }
 }
