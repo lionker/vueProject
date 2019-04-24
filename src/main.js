@@ -13,6 +13,13 @@ Vue.component('Star', Star)
 new Vue({
   el: '#app',
   router,
-  render: h => h(App), //?
+   /*components: {
+    App,
+  },
+  template: '<App/>',*/
+  render: h => h(App),   // 这个等于上面注释的两步, 实现原理为下面注释 
+   /*render: function (createElement) { // 将render返回的标签渲染到页面上去
+    return createElement(App)  // '<App/>'
+  },*/
   store
 })
