@@ -27,6 +27,7 @@
                 class="food-item bottom-border-1px"
                 v-for="(food, index) in good.foods"
                 :key="index"
+                @click="showFood(food)"
               >
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
@@ -43,7 +44,7 @@
                     <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    <CartControl :food='food'/>
+                    <CartControl :food="food"/>
                   </div>
                 </div>
               </li>
@@ -52,6 +53,7 @@
         </ul>
       </div>
     </div>
+    <Food :food="food" ref="food"/>
   </div>
 </template>
 
@@ -59,11 +61,13 @@
 import { mapState } from "vuex";
 import BScroll from "better-scroll";
 
+import Food from "../../../components/Food/Food";
 export default {
   data() {
     return {
       scrollY: 0, // 右侧列表的滑动坐标,在滑动过程中实时设置
-      tops: [] // 右侧所有分类li的top组成的数组, 在最初显示列表时设置
+      tops: [], // 右侧所有分类li的top组成的数组, 在最初显示列表时设置
+      food: {}  // 需要显示的food
     };
   },
   async mounted() {
@@ -77,6 +81,10 @@ export default {
 
     /* new BScroll(".menu-wrapper", {});
     new BScroll(".foods-wrapper", {}); */
+  },
+
+  components: {
+    Food
   },
   computed: {
     ...mapState({
@@ -93,9 +101,9 @@ export default {
       // 每次currentIndex变化, 左侧滚动到最新分类项(可能达不到)
       if (index !== this.index && this.leftScroll) {
         //将最新的index保存起来
-        this.index = index
+        this.index = index;
         // 左侧滚动到最新分类项
-        this.leftScroll.scrollToElement(this.$refs.leftUl.children[index], 300)
+        this.leftScroll.scrollToElement(this.$refs.leftUl.children[index], 300);
       }
       return index;
     }
@@ -106,7 +114,7 @@ export default {
     _initScroll() {
       // 必须在列表显示之后创建: watch + $nextTick()
       this.leftScroll = new BScroll(".menu-wrapper", {
-        click: true, //分发自定义点击事件
+        click: true //分发自定义点击事件
       });
       this.rightScroll = new BScroll(".foods-wrapper", {
         probeType: 1, //非实时
@@ -144,16 +152,24 @@ export default {
       console.log("tops", tops);
     },
 
-    clickLeft (index) {
-      console.log('clickLeft')
+    clickLeft(index) {
+      console.log("clickLeft");
       // 右侧对应位置的坐标
-      const top = this.tops[index]
+      const top = this.tops[index];
 
       // 设置scrollY为目标
-      this.scrollY = top
+      this.scrollY = top;
 
       // 让右侧滑动到对应的位置
-      this.rightScroll.scrollTo(0, -top, 300)
+      this.rightScroll.scrollTo(0, -top, 300);
+    },
+
+    // 显示点击的food
+    showFood(food){
+      // 设置food
+      this.food = food
+      // 显示food组件
+      this.$refs.food.toggleShow()
     }
   }
 };
