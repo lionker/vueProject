@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import { Toast, MessageBox } from "mint-ui";
 import { reqSendCode, reqPwdLogin, reqSmsLogin } from "../../api";
 
 export default {
@@ -115,9 +116,9 @@ export default {
       // 发送ajax请求: 发送验证码
       const result = await reqSendCode(this.phone);
       if (result.code === 0) {
-        alert("发送验证码成功");
+        Toast('发送验证码成功')
       } else {
-        alert("验证码发送失败");
+        MessageBox.alert('验证码发送失败')
         // 停止倒计时
         this.computeTime = 0;
       }
@@ -130,7 +131,7 @@ export default {
       // 收集表单数据
       const { loginWay, isRightPhone, phone, code, name, pwd, captcha } = this;
 
-      let result
+      let result;
       if (loginWay) {
         //短信
         if (!isRightPhone) {
@@ -140,10 +141,11 @@ export default {
         }
 
         // 发送登录的ajax请求
-        result = await reqSmsLogin(phone, code)
+        result = await reqSmsLogin(phone, code);
 
-        if(result.code===0){ // 如果成功了, 停止计时
-          this.computeTime = 0
+        if (result.code === 0) {
+          // 如果成功了, 停止计时
+          this.computeTime = 0;
         }
       } else {
         //密码
@@ -155,32 +157,34 @@ export default {
           return alert("必须指定4位验证码");
         }
 
-        // 发送登录的ajax请求 
-        result = await reqPwdLogin({name, pwd, captcha})
-          // 如果失败了,更新图形验证码
-        if(result.code === 1) {
-          this.updataCaptcha
+        // 发送登录的ajax请求
+        result = await reqPwdLogin({ name, pwd, captcha });
+        // 如果失败了,更新图形验证码
+        if (result.code === 1) {
+          this.updataCaptcha;
         }
       }
 
       // 根据result来处理
-      if(result.code===0) { //登录成功
+      if (result.code === 0) {
+        //登录成功
         // 1. 将user信息对象保存到state
-        const user = result.data
-        this.$store.dispatch('saveUser', user)
+        const user = result.data;
+        this.$store.dispatch("saveUser", user);
         // 2.跳转到个人中心
-        this.$router.replace('/profile')
+        this.$router.replace("/profile");
       } else {
         // 登录失败
-        alert(result.msg)
+        alert(result.msg);
       }
     },
 
     // 更新图片验证码
     updateCaptcha() {
       // window.location = 'http://localhost:5000/captcha'
-        // 一旦给img指定新的src值, 浏览器就会自动发请求获取数据显示为图片  (添加时间戳参数)
-        this.$refs.captcha.src = 'http://localhost:5000/captcha?time=' + Date.now()
+      // 一旦给img指定新的src值, 浏览器就会自动发请求获取数据显示为图片  (添加时间戳参数)
+      this.$refs.captcha.src =
+        "http://localhost:5000/captcha?time=" + Date.now();
     }
   }
 };
