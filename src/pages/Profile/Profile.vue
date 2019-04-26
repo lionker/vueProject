@@ -101,9 +101,22 @@
 
 <script>
 import {mapState} from 'vuex'
+import {MessageBox} from 'mint-ui'
+
 export default {
   computed: {
     ...mapState(['user'])
+  },
+
+  methods: {
+    logout () {
+      MesageBox.comfirm('确定退出吗？').then(action => {
+        // 发出登录的请求
+        this.$store.dispath('logout')
+      }).catch(action => {
+        console.log('取消')
+      })
+    }
   }
 };
 </script>

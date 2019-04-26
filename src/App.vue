@@ -15,6 +15,8 @@ export default {
   mounted () {
     // 异步获取当前地址信息
     this.$store.dispatch('getAddress') ///必须在main.js注册,才能用store
+    // 异步获取用户信息
+    this.$store.dispatch('getUser') 
   }, 
   components: {
     FooterGuide
