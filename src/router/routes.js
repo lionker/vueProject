@@ -12,6 +12,8 @@ import ShopGoods from '../pages/Shop/ShopGoods/ShopGoods'
 import ShopRatings from '../pages/Shop/ShopRatings/ShopRatings'
 import ShopInfo from '../pages/Shop/ShopInfo/ShopInfo'
 
+
+
 export default [
   {
     path: '/msite',

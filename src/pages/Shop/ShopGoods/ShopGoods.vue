@@ -69,7 +69,7 @@ export default {
     return {
       scrollY: 0, // 右侧列表的滑动坐标,在滑动过程中实时设置
       tops: [], // 右侧所有分类li的top组成的数组, 在最初显示列表时设置
-      food: {}  // 需要显示的food
+      food: {} // 需要显示的food
     };
   },
   async mounted() {
@@ -94,16 +94,20 @@ export default {
       goods: state => state.shop.goods
     }),
 
-    // 当前分类项下标
+    //当前分类项下标
     currentIndex() {
       const { scrollY, tops } = this;
-
+      /*
+        tops = [0, 5, 8, 12, 15]
+        scrollY in [top, nextTop)
+         */
       const index = tops.findIndex(
         (top, index) => scrollY >= top && scrollY < tops[index + 1]
       );
       // 每次currentIndex变化, 左侧滚动到最新分类项(可能达不到)
       if (index !== this.index && this.leftScroll) {
-        //将最新的index保存起来
+        // 当前下标变化了
+        // 将最新的index保存想来
         this.index = index;
         // 左侧滚动到最新分类项
         this.leftScroll.scrollToElement(this.$refs.leftUl.children[index], 300);
@@ -127,14 +131,14 @@ export default {
       });
 
       //给右侧列表绑定滚动监听
-      this.rightScroll.on("scoll", ({ x, y }) => {
-        console.log("scoll,", x, y);
+      this.rightScroll.on("scroll", ({ x, y }) => {
+        console.log("scroll,", x, y);
         this.scrollY = Match.abs(y);
       });
 
       // 给右侧列表绑定滚动结束监听
       this.rightScroll.on("scrollEnd", ({ x, y }) => {
-        console.log("scollEnd", x, y);
+        console.log("scrollEnd", x, y);
         this.scrollY = Math.abs(y);
       });
     },
@@ -168,11 +172,11 @@ export default {
     },
 
     // 显示点击的food
-    showFood(food){
+    showFood(food) {
       // 设置food
-      this.food = food
+      this.food = food;
       // 显示food组件
-      this.$refs.food.toggleShow()
+      this.$refs.food.toggleShow();
     }
   }
 };
