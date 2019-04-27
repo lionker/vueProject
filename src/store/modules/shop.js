@@ -8,7 +8,8 @@ import {
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
   INCREMENT_FOOD_COUNT,
-  DECREMENT_FOOD_COUNT
+  DECREMENT_FOOD_COUNT,
+  CLEAR_CART
 } from '../mutation-types'
 import {
   reqGoods,
@@ -54,10 +55,16 @@ const mutations = {
     if (food.count > 0) {
       food.count--
       // food的数量一旦减为0, 从购物车中移出它
-      if (food.count===0) {
+      if (food.count === 0) {
         state.cartFoods.splice(state.cartFoods.indexOf(food), 1)
       }
     }
+  },
+  [CLEAR_CART](state) {
+    // 将购物车中所有的food的count置为0
+    state.cartFoods.forEach(food => food.count = 0)
+    // 重置购物车数组
+    state.cartFoods = []
   }
 }
 
@@ -93,23 +100,28 @@ const actions = {
   },
 
   // 更新food数量
-  updateFoodCount ({commit}, {isAdd, food}){
+  updateFoodCount({ commit }, { isAdd, food }) {
     if (isAdd) {
       commit(INCREMENT_FOOD_COUNT, food)
     } else {
       commit(DECREMENT_FOOD_COUNT, food)
     }
+  },
+
+  // 清除购物车
+  clickEmptyCart({ commit }) {
+    commit(CLEAR_CART)
   }
 }
 
 const getters = {
   // 总数量
-  totalCount (state) {
+  totalCount(state) {
     return state.cartFoods.reduce((pre, food) => pre + food.count, 0)
   },
 
   // 总价格
-  totalPrice (state) {
+  totalPrice(state) {
     return state.cartFoods.reduce((pre, food) => pre + food.count * food.price, 0)
   }
 }

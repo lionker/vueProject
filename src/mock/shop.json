@@ -8,7 +8,7 @@
     "foodScore": 4.3,
     "rankRate": 69.2,
     "minPrice": 20,
-    "deliveryPrice": 4,
+    "deliveryPrice|0-4.1": 4,
     "ratingCount": 24,
     "sellCount": 90,
     "distance": "1000m",
