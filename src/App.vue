@@ -3,7 +3,9 @@
     <!-- 显示当前路由组件 -->
     <router-view/>
 
-    <FooterGuide/>
+    <FooterGuide v-show="$route.meta.isShow"/>
+    <!-- 1. 在route中配置了meta属性值true;
+    2. 若没有在配置项中写入meta属性值,则默认为空字符 --> 
   </div>
 </template>
 
