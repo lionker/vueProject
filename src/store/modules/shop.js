@@ -20,6 +20,7 @@ const state = {
   goods: [], // 商品列表
   ratings: [], // 商家评价列表
   info: {}, // 商家信息
+  cartFoods: [] //购物项列表
 }
 
 const mutations = {
@@ -44,11 +45,18 @@ const mutations = {
       // food.count //新添加的属性没有数据绑定
       // 向响应式对象添加一个属性, 并确保这个新属性同样是响应式的, 且触发视图更新
       Vue.set(food, 'count', 1)
+
+      // 将新添加的food添加到购物车
+      state.cartFoods.push(food)
     }
   },
   [DECREMENT_FOOD_COUNT](state, food) {
     if (food.count > 0) {
       food.count--
+      // food的数量一旦减为0, 从购物车中移出它
+      if (food.count===0) {
+        state.cartFoods.splice(state.cartFoods.indexOf(food), 1)
+      }
     }
   }
 }
@@ -94,7 +102,17 @@ const actions = {
   }
 }
 
-const getters = {}
+const getters = {
+  // 总数量
+  totalCount (state) {
+    return state.cartFoods.reduce((pre, food) => pre + food.count, 0)
+  },
+
+  // 总价格
+  totalPrice (state) {
+    return state.cartFoods.reduce((pre, food) => pre + food.count * food.price, 0)
+  }
+}
 
 export default {
   state,
