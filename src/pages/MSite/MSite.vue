@@ -2,12 +2,15 @@
   <section class="msite">
     <!--首页头部-->
     <Header :title="address.name || '正在定位中...'">
-      <span class="header_search" slot="left">
-        <i class="iconfont icon-sousuo"></i>
-      </span>
-      <span class="header_login" slot="right">
-        <span class="header_login_text">登录|注册</span>
-      </span>
+      <router-link class="header_search" slot="left" to="/search">
+        <i class="iconfont icon-sousuo" style="font-size: 25px;color: #fff"></i>
+      </router-link>
+      <router-link class="header_login" slot="right" :to="user._id ? '/profile': '/login' ">
+        <span class="header_login_text" v-if="!user._id">登录|注册</span>
+        <span class="header_login_text" v-else>
+          <i class="iconfont icon-person"></i>
+        </span>
+      </router-link>
     </Header>
 
     <!--首页导航-->
@@ -67,6 +70,7 @@ export default {
     ...mapState({
       address: state => state.msite.address,
       categorys: state => state.msite.categorys,
+      user: state => state.user.user
     }),
 
     /*
@@ -119,9 +123,9 @@ export default {
         new Swiper(".swiper-container", {
           loop: true,
           // 如果需要分页器
-            pagination: {
-              el: '.swiper-pagination',
-            },
+          pagination: {
+            el: ".swiper-pagination"
+          }
         });
       });
     }

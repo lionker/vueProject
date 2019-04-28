@@ -9,19 +9,23 @@ import {
   RECEIVE_RATINGS,
   INCREMENT_FOOD_COUNT,
   DECREMENT_FOOD_COUNT,
-  CLEAR_CART
+  CLEAR_CART,
+  RECEIVE_SEARCH_SHOPS
 } from '../mutation-types'
 import {
   reqGoods,
   reqRatings,
-  reqInfo
+  reqInfo,
+  reqSearchShop
 } from '../../api'
 
 const state = {
   goods: [], // 商品列表
   ratings: [], // 商家评价列表
   info: {}, // 商家信息
-  cartFoods: [] //购物项列表
+  cartFoods: [], //购物项列表
+  latitude: 40.10038, // 纬度
+  longitude: 116.36867, // 经度
 }
 
 const mutations = {
@@ -65,6 +69,11 @@ const mutations = {
     state.cartFoods.forEach(food => food.count = 0)
     // 重置购物车数组
     state.cartFoods = []
+  },
+
+  [RECEIVE_SEARCH_SHOPS](state, { searchShops }) {
+    Vue.set(state, 'searchShops')
+    state.searchShops = searchShops
   }
 }
 
@@ -114,6 +123,17 @@ const actions = {
   // 清除购物车
   clickEmptyCart({ commit }) {
     commit(CLEAR_CART)
+  },
+
+  // 异步搜索商家商品列表
+  async searchShops({ commit, state }, keyword) {
+
+    const geohash = state.latitude + ',' + state.longitude
+    const result = await reqSearchShop(geohash, keyword)
+    if (result.code === 0) {
+      const searchShops = result.data
+      commit(RECEIVE_SEARCH_SHOPS, { searchShops })
+    }
   }
 }
 
@@ -129,13 +149,13 @@ const getters = {
   },
 
   // 总评价输
-  totalRatingCount (){
-    return state.ratings.length 
+  totalRatingCount() {
+    return state.ratings.length
   },
 
   // 推荐评价的数量
-  totalPositiveRatingCount (state) {
-    return state.ratings.renduce((pre, rating) => pre + (rating.rateType === 0 ? 1 : 0), 0)
+  totalPositiveRatingCount(state) {
+    return state.ratings.reduce((pre, rating) => pre + (rating.rateType === 0 ? 1 : 0), 0)
   }
 }
 

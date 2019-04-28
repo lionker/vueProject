@@ -116,9 +116,9 @@ export default {
       // 发送ajax请求: 发送验证码
       const result = await reqSendCode(this.phone);
       if (result.code === 0) {
-        Toast('发送验证码成功')
+        Toast("发送验证码成功");
       } else {
-        MessageBox.alert('验证码发送失败')
+        MessageBox.alert("验证码发送失败");
         // 停止倒计时
         this.computeTime = 0;
       }
@@ -158,7 +158,7 @@ export default {
         }
 
         // 发送登录的ajax请求
-        result = await reqPwdLogin({ name, pwd, captcha });
+        result = await reqPwdLogin( name, pwd, captcha );
         // 如果失败了,更新图形验证码
         if (result.code === 1) {
           this.updataCaptcha;
