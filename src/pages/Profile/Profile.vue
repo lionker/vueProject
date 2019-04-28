@@ -7,14 +7,15 @@
           <i class="iconfont icon-person"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top" v-if="!user.phone">
-            {{user.names ? user.name : '登录/注册'}}
+          <p class="user-info-top" v-if="user.phone ? !user.phone : !user.name">
+            {{user.name ? user.name : '登录/注册'}}
           </p>
-          <p v-if='!user.name'>
+          <p v-if='user.name'>
             <span class="user-icon">
-              <i class="iconfont icon-shouji icon-mobile"></i>
+              <i class="iconfont icon-shouji icon-mobile">{{user.name}}</i>
             </span>
-            <span class="icon-mobile-number">{{user.phone ? user.phone : '暂无绑定手机号'}}</span>
+            <br/>
+            <span class="icon-mobile-number" style="display: block;border: 1px;marginTop: 10px">{{user.phone ? user.phone : '暂无绑定手机号'}}</span>
           </p>
         </div>
         <span class="arrow">

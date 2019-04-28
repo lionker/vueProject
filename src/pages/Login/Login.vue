@@ -158,7 +158,7 @@ export default {
         }
 
         // 发送登录的ajax请求
-        result = await reqPwdLogin( name, pwd, captcha );
+        result = await reqPwdLogin(name, pwd, captcha);
         // 如果失败了,更新图形验证码
         if (result.code === 1) {
           this.updataCaptcha;
@@ -290,6 +290,8 @@ export default {
                 background #fff
                 box-shadow 0 2px 4px 0 rgba(0, 0, 0, 0.1)
                 transition transform 0.3s
+                &.right
+                  transform translateX(27px)
           .login_hint
             margin-top 12px
             color #999
