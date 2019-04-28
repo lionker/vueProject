@@ -96,6 +96,10 @@
         </div>
       </a>
     </section>
+
+    <section class="profile_my_order border-1px">
+      <mt-button type="danger" style="width: 100%;" @click="logout" v-if="user._id">退出登录</mt-button>
+    </section>
   </div>
 </template>
 
@@ -112,9 +116,10 @@ export default {
 
   methods: {
     logout () {
-      MesageBox.comfirm('确定退出吗？').then(action => {
+      MessageBox.confirm('确定退出吗？').then(action => {
         // 发出登录的请求
-        this.$store.dispath('logout')
+        console.log('确定')
+        this.$store.dispatch('logout')
       }).catch(action => {
         console.log('取消')
       })

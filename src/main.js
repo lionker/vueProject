@@ -1,4 +1,5 @@
 import Vue from 'vue'
+// 引入
 import { Button } from 'mint-ui'
 
 import App from './App'
@@ -14,6 +15,7 @@ Vue.component('Header', Header)
 Vue.component('Star', Star)
 Vue.component('Star', Star)
 Vue.component('CartControl', CartControl)
+Vue.component(Button.name, Button)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
