@@ -2,10 +2,17 @@
 功能：包含所有路由的数组
 */
 
-import MSite from '../pages/MSite/MSite'
-import Order from '../pages/Order/Order'
-import Profile from '../pages/Profile/Profile'
-import Search from '../pages/Search/Search'
+// 路由懒加载 
+//  在注册路由时不会加载(请求获取)模块对应的打包文件, 只有当请求对应路由路径才会请求加载
+const Profile = () => import('../pages/Profile/Profile')
+const Order = () => import('../pages/Order/Order')
+const MSite = () => import('../pages/MSite/MSite')
+const Search = () => import('../pages/Search/Search')
+
+// import MSite from '../pages/MSite/MSite'
+// import Order from '../pages/Order/Order'
+// import Profile from '../pages/Profile/Profile'
+// import Search from '../pages/Search/Search'
 import Login from '../pages/Login/Login'
 import Shop from '../pages/Shop/Shop'
 import ShopGoods from '../pages/Shop/ShopGoods/ShopGoods'

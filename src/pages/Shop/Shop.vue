@@ -14,7 +14,10 @@
       </div>
     </div>
 
-    <router-view/>
+    <!-- 缓存路由 -->
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
   </div>
 </template>
 
@@ -23,7 +26,7 @@ import ShopHeader from "../../components/ShopHeader/ShopHeader";
 
 export default {
   mounted() {
-    this.$store.dispatch('getShopInfo')
+    this.$store.dispatch("getShopInfo");
   },
   components: {
     ShopHeader
