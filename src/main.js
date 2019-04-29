@@ -3,6 +3,7 @@ import Vue from 'vue'
 import { Button } from 'mint-ui'
 import VueLazyload from 'vue-lazyload'
 
+
 import App from './App'
 import router from './router'
 import store from './store/index'
@@ -13,6 +14,7 @@ import CartControl from './components/CartControl/CartControl'
 import './mock/mockServer'
 import loading from './common/imgs/loading.gif'
 import './filters' // 加载过滤器
+
 // 注册全局组件
 Vue.component('Header', Header)
 Vue.component('Star', Star)
@@ -20,6 +22,7 @@ Vue.component('Star', Star)
 Vue.component('CartControl', CartControl)
 Vue.component(Button.name, Button)
 
+// 使用插件
 Vue.use(VueLazyload, { // 内部会定义一个指令: lazy
   loading,
 })
