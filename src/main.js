@@ -14,6 +14,7 @@ import CartControl from './components/CartControl/CartControl'
 import './mock/mockServer'
 import loading from './common/imgs/loading.gif'
 import './filters' // 加载过滤器
+import './validate'
 
 // 注册全局组件
 Vue.component('Header', Header)

@@ -12,16 +12,32 @@
         <form>
           <div :class="{on: loginWay}">
             <section class="login_message">
-              <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
+              <input
+                type="tel"
+                maxlength="11"
+                placeholder="手机号"
+                v-model="phone"
+                name="phone"
+                v-validate="'required|mobile'"
+              >
               <button
                 :disabled="!isRightPhone || computeTime>0"
                 class="get_verification"
                 :class="{right_phone_number: isRightPhone}"
                 @click.prevent="sendCode"
               >{{computeTime>0 ? `已发送(${computeTime}s)` : '获取验证码'}}</button>
+              <span style="color: red">{{errors.first('phone')}}</span>
             </section>
             <section class="login_verification">
-              <input type="tel" maxlength="8" placeholder="验证码" v-model="code">
+              <input
+                type="tel"
+                maxlength="8"
+                placeholder="验证码"
+                v-model="code"
+                name="code"
+                v-validate="{required: true, regex: /^\d{6}$/}"
+              >
+              <span style="color: red">{{errors.first('code')}}</span>
             </section>
             <section class="login_hint">
               温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
@@ -31,14 +47,24 @@
           <div :class="{on: !loginWay}">
             <section>
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名" v-model="name">
+                <input
+                  type="tel"
+                  maxlength="11"
+                  placeholder="手机/邮箱/用户名"
+                  v-model="name"
+                  name="name"
+                  v-validate="'required'"
+                >
+                <span style="color: red">{{errors.first('name')}}</span>
               </section>
               <section class="login_verification">
                 <input
-                  :type="isShowPwd ? 'text' : 'password'"
+                  :type="isShowPwd? 'text' : 'password'"
                   maxlength="8"
                   placeholder="密码"
                   v-model="pwd"
+                  name="pwd"
+                  v-validate="{required: true}"
                 >
                 <div
                   class="switch_button"
@@ -48,9 +74,17 @@
                   <div class="switch_circle" :class="{right: isShowPwd}"></div>
                   <span class="switch_text">{{isShowPwd ? 'abc' : ''}}</span>
                 </div>
+                <span style="color: red">{{errors.first('pwd')}}</span>
               </section>
               <section class="login_message">
-                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
+                <input
+                  type="text"
+                  maxlength="11"
+                  placeholder="验证码"
+                  v-model="captcha"
+                  name="captcha"
+                  v-validate="{required: true, regex: /^.{4}$/}"
+                >
                 <img
                   class="get_verification"
                   src="http://localhost:5000/captcha"
@@ -58,6 +92,7 @@
                   ref="captcha"
                   @click="updateCaptcha"
                 >
+                <span style="color: red">{{errors.first('captcha')}}</span>
               </section>
             </section>
           </div>
@@ -75,7 +110,7 @@
 <script>
 import { Toast, MessageBox } from "mint-ui";
 import { reqSendCode, reqPwdLogin, reqSmsLogin } from "../../api";
-
+import {RECEIVE_USER} from '../../store/mutation-types'
 export default {
   //
   data() {
@@ -132,51 +167,40 @@ export default {
       const { loginWay, isRightPhone, phone, code, name, pwd, captcha } = this;
 
       let result;
-      if (loginWay) {
-        //短信
-        if (!isRightPhone) {
-          return alert("请输入正确的手机号");
-        } else if (!/^\d{6}$/.test(code)) {
-          return alert("验证码必须是6位数字");
-        }
-
-        // 发送登录的ajax请求
-        result = await reqSmsLogin(phone, code);
-
-        if (result.code === 0) {
-          // 如果成功了, 停止计时
-          this.computeTime = 0;
-        }
-      } else {
-        //密码
-        if (!name.trim()) {
-          return alert("必须指定用户名");
-        } else if (!pwd.trim()) {
-          return alert("必须指定密码");
-        } else if (!/^.{4}$/.test(captcha)) {
-          return alert("必须指定4位验证码");
-        }
-
-        // 发送登录的ajax请求
-        result = await reqPwdLogin(name, pwd, captcha);
-        // 如果失败了,更新图形验证码
-        if (result.code === 1) {
-          this.updataCaptcha;
-        }
-      }
-
+      const validateNames = loginWay ? ['phone', 'code'] : ['name', 'pwd', 'captcha']
+      // 进行整体表单验证
+      const success = await this.$validator.validateAll(validateNames)
       // 根据result来处理
-      if (result.code === 0) {
-        //登录成功
-        // 1. 将user信息对象保存到state
-        const user = result.data;
-        this.$store.dispatch("saveUser", user);
-        // 2.跳转到个人中心
-        this.$router.replace("/profile");
-      } else {
-        // 登录失败
-        alert(result.msg);
-      }
+      if (success) {  //验证成功
+          if (loginWay) { //如果是短信登录
+            //全部通过了,发短信登录请求
+            result = await reqSmsLogin({phone, code})
+          } else {
+            // 如果是密码登陆
+            // 全部通过了, 密码信登陆的请求
+            result = await reqPwdLogin(name, pwd, captcha)
+            // 如果失败了, 更新图形验证码
+            if(result.code !==0){  //
+              this.updateCaptcha()
+              this.captcha = ''
+            }
+          }
+
+          // 根据结果做相应处理
+          if (result.code === 0) {
+            
+            const user = result.data
+            // 保存user(vuex的state中)  // 因为已经请求数据,所以不经过actions 直接commit
+            this.$store.commit(RECEIVE_USER, user)
+            // 跳转到个人中心
+            this.$router.replace('/profile')
+          } else {
+            // 失败了
+            alert(result.msg)
+          }
+        } else {
+          alert ('验证失败')
+        }
     },
 
     // 更新图片验证码
