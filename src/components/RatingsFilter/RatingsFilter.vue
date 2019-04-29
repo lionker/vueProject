@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   props: {
@@ -32,7 +32,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['totalRatingCount', 'totalPositiveRatingCount'])
+    ...mapGetters(['totalRatingCount', 'totalPositiveRatingCount'])
   },
 
   methods: {
